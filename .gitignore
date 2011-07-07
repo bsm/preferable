@@ -1,0 +1,5 @@
+.yardoc
+.project
+spec/tmp
+doc
+*.gem
