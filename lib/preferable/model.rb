@@ -47,7 +47,7 @@ module Preferable::Model
 
     # Preferences writer. Updates existing preferences (doesn't replace them!)
     def preferences=(hash)
-      preferences.update(hash) if hash.is_a?(Hash)
+      preferences.set(hash) if hash.is_a?(Hash)
       preferences
     end
 
