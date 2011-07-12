@@ -12,8 +12,9 @@ class Preferable::Schema < Hash
   end
 
   Preferable::Field::TYPES.each do |sym|
-    define_method sym do |name, options|
-      field name, sym, options
+    define_method sym do |*args|
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      args.each {|name| field(name, sym, options) }
     end
   end
 

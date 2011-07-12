@@ -14,23 +14,23 @@ Then, bundle:
 
 Add a new migration to your project. Example:
 
-    $ rails g migration AddPreferencesToUsers
+    $ rails g migration AddPreferencesToUsers preferences:text
 
     # Rails 2 & 3.0
     class AddPreferencesToUsers < ActiveRecord::Migration
       def self.up
-        add_column :users, :prefeences, :text
+        add_column :users, :preferences, :text
       end
 
       def self.down
-        remove_column :users, :prefeences, :text
+        remove_column :users, :preferences, :text
       end
     end
 
     # Rails >=3.1
     class AddPreferencesToUsers < ActiveRecord::Migration
       def change
-        add_column :users, :prefeences, :text
+        add_column :users, :preferences, :text
       end
     end
 
@@ -64,7 +64,7 @@ Read and write preferences:
     # Makes preferences persistent
     user.save
 
-Specify condititions (if/unless):
+Specify conditions (if/unless):
 
     class User < ActiveRecord::Base
 
