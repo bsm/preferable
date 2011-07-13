@@ -1,6 +1,6 @@
 class Preferable::Set < Hash
   MODEL_KEY = "_".freeze
-  PRIVATE   = [:rehash, :fetch, :store, :shift, :delete, :delete_if, :keep_if].to_set
+  PRIVATE   = [:rehash, :fetch, :store, :shift, :delete, :delete_if, :keep_if].to_set.freeze
 
   # Make destructive methods private
   (public_instance_methods - Hash.superclass.public_instance_methods).each do |m|

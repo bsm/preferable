@@ -14,7 +14,7 @@ describe Preferable::Set do
     subject.model.should == User
   end
 
-  it 'shold be serializable' do
+  it 'should be serializable' do
     subject.set :color => '222222', :newsletter => '1'
     dumped = YAML.dump(subject)
     loaded = YAML.load(dumped)

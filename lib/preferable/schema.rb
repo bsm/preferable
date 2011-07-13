@@ -2,10 +2,6 @@ require 'set'
 
 class Preferable::Schema < Hash
 
-  def initialize
-    super
-  end
-
   def field(name, type, options = {})
     item = Preferable::Field.new(name, type, options)
     self[item.name] = item
@@ -13,7 +9,7 @@ class Preferable::Schema < Hash
 
   Preferable::Field::TYPES.each do |sym|
     define_method sym do |*args|
-      options = args.last.is_a?(Hash) ? args.pop : {}
+      options = args.extract_options!
       args.each {|name| field(name, sym, options) }
     end
   end

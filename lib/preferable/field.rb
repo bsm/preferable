@@ -1,6 +1,6 @@
 class Preferable::Field
   TYPES = [:string, :integer, :float, :boolean, :date, :datetime, :array].to_set.freeze
-  TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE'].to_set
+  TRUE_VALUES = [true, 1, '1', 't', 'T', 'true', 'TRUE'].to_set.freeze
 
   attr_reader :name, :type, :options, :default
 
