@@ -23,7 +23,7 @@ module Preferable::Model
     def preferable(&block)
       unless _preferable
         self._preferable = Preferable::Schema.new
-        serialize :preferences, Preferable::Set
+        serialize :preferences
         include PreferableMethods
       end
       self._preferable.instance_eval(&block) if block

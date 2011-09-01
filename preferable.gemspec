@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.name        = "preferable"
   s.summary     = "Simple preferences store for ActiveRecord"
   s.description = "Great for storing user preferences"
-  s.version     = '0.1.1'
+  s.version     = '0.2.0'
 
   s.authors     = ["Dimitrij Denissenko", "Evgeniy Dolzhenko"]
   s.email       = "dimitrij@blacksquaremedia.com"
@@ -17,6 +17,5 @@ Gem::Specification.new do |s|
   s.files        = Dir['README.markdown', 'lib/**/*']
 
   s.add_dependency "abstract"
-  s.add_dependency "activerecord", "~> 3.0.0"
-  s.add_dependency "activesupport", "~> 3.0.0"
+  s.add_dependency "activerecord", ">= 3.0.0", "< 3.2.0"
 end

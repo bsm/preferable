@@ -33,7 +33,7 @@ describe Preferable::Model do
     end
 
     it 'should serialize preferences' do
-      subject.class.serialized_attributes.should == { "preferences" => Preferable::Set }
+      subject.class.serialized_attributes.keys.should include('preferences')
     end
 
   end
