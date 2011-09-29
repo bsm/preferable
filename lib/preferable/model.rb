@@ -21,13 +21,12 @@ module Preferable::Model
     #   end
     #
     def preferable(&block)
-      unless _preferable
-        self._preferable = Preferable::Schema.new
-        serialize :preferences
-        include PreferableMethods
-      end
-      self._preferable.instance_eval(&block) if block
-      self._preferable
+      serialize :preferences, Hash
+      include PreferableMethods
+
+      self._preferable   = self._preferable.dup if self._preferable
+      self._preferable ||= Preferable::Schema.new
+      self._preferable.instance_eval(&block)
     end
 
   end
@@ -41,8 +40,8 @@ module Preferable::Model
     #   user.preferences[:theme_id] = 3
     #
     def preferences
-      value = read_attribute(:preferences)
-      value.is_a?(Preferable::Set) ? value : write_attribute(:preferences, Preferable::Set.new(self.class.name))
+      result = super
+      result.is_a?(Preferable::Set) ? result : write_attribute(:preferences, Preferable::Set.wrap(self, result))
     end
 
     # Preferences writer. Updates existing preferences (doesn't replace them!)

@@ -10,14 +10,43 @@ describe Preferable::Model do
     subject.send(:included_modules).should include(described_class)
   end
 
+  it 'should store a preferable schema' do
+    User._preferable.keys.should =~ [:newsletter, :color]
+  end
+
+  it 'should inherit preferable schema correctly' do
+    Admin._preferable.keys.should =~ [:newsletter, :color, :reminder]
+  end
+
   it 'should allow to define preferables' do
     res = nil
-    subject.preferable.should be_a(Preferable::Schema)
+    subject._preferable.should be_nil
     subject.preferable { res = self.class.name }
+    subject._preferable.should be_a(Preferable::Schema)
     res.should == "Preferable::Schema"
   end
 
+  describe "saving" do
+
+    it 'should save preferences with new records' do
+      user = User.new
+      user.preferences.should == {}
+      user.preferences[:color] = '222222'
+      user.tap(&:save!).tap(&:reload).preferences.should == { :color => '222222' }
+    end
+
+    it 'should save preferences with existing records' do
+      user = User.create!(:name => 'Random', :preferences => { :color => '222222' }).reload
+      user.preferences.should == { :color => '222222' }
+      user.preferences[:newsletter] = '1'
+      user.tap(&:save!).tap(&:reload).preferences.should == { :color => '222222', :newsletter => true }
+    end
+
+  end
+
+
   describe "instances" do
+
     subject do
       User.new
     end
@@ -29,7 +58,7 @@ describe Preferable::Model do
     it 'should allow assigning preferences' do
       subject.preferences = { :color => '222222' }
       subject.preferences.should be_a(Preferable::Set)
-      subject.preferences.should == { "_" => "::User", :color => '222222' }
+      subject.preferences.should == { :color => '222222' }
     end
 
     it 'should serialize preferences' do

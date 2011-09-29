@@ -2,24 +2,42 @@ require 'spec_helper'
 
 describe Preferable::Set do
 
+  let :user do
+    User.new
+  end
+
+  let :admin do
+    User.new
+  end
+
   subject do
-    Preferable::Set.new 'User'
+    user.preferences
   end
 
-  def preferences
-    subject.except('_')
+  it 'should wrap values' do
+    described_class.wrap(user, subject).should be(subject)
+
+    described_class.wrap(admin, subject).should_not be(subject)
+    described_class.wrap(admin, subject).should be_instance_of(described_class)
+
+    described_class.wrap(user, {}).should_not be(subject)
+    described_class.wrap(user, {}).should be_instance_of(described_class)
   end
 
-  it 'should reference the model' do
-    subject.model.should == User
+  it 'should reference the owner' do
+    subject.owner.should == user
+  end
+
+  it 'should be convertable to a simple hash' do
+    subject.to_hash.should be_instance_of(Hash)
   end
 
   it 'should be serializable' do
     subject.set :color => '222222', :newsletter => '1'
     dumped = YAML.dump(subject)
     loaded = YAML.load(dumped)
-    loaded.should == subject
-    loaded.model.should == User
+    loaded.should be_instance_of(Hash)
+    loaded.should == { :newsletter=>true, :color=>"222222" }
   end
 
   describe "reading" do
@@ -40,38 +58,44 @@ describe Preferable::Set do
 
     it 'should ignore invalid keys' do
       subject[:invalid] = '1'
-      preferences.should == {}
+      subject.should == {}
     end
 
     it 'should set values' do
       subject[:color] = '222222'
-      preferences.should == { :color => '222222' }
+      subject.should == { :color => '222222' }
+    end
+
+    it 'should notify record about changes' do
+      subject[:color] = '222222'
+      user.should be_changed
+      user.changed_attributes.should == { "preferences"=>{} }
     end
 
     it 'should type cast values' do
       subject[:color] = 222222
-      preferences.should == { :color => '222222' }
+      subject.should == { :color => '222222' }
     end
 
     it 'should unset key when defaults are assigned' do
       subject[:color] = '222222'
-      preferences.should == { :color => '222222' }
+      subject.should == { :color => '222222' }
       subject[:color] = '444444'
-      preferences.should == {}
+      subject.should == {}
     end
 
     it 'should unset key when nil is assigned' do
       subject[:color] = '222222'
-      preferences.should == { :color => '222222' }
+      subject.should == { :color => '222222' }
       subject[:color] = nil
-      preferences.should == {}
+      subject.should == {}
     end
 
     it 'should allow mass-update' do
       subject.set 'color' => 222222, :newsletter => '1'
-      preferences.should == { :color => '222222', :newsletter => true }
+      subject.should == { :color => '222222', :newsletter => true }
       subject.set :color => nil, :newsletter => false
-      preferences.should == {}
+      subject.should == {}
     end
 
   end

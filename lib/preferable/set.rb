@@ -1,5 +1,4 @@
 class Preferable::Set < Hash
-  MODEL_KEY = "_".freeze
   PRIVATE   = [:rehash, :fetch, :store, :shift, :delete, :delete_if, :keep_if].to_set.freeze
 
   # Make destructive methods private
@@ -7,13 +6,17 @@ class Preferable::Set < Hash
     PRIVATE.include?(m.to_sym) || m.to_s.ends_with?('!')
   end
 
-  def initialize(model_name)
-    super()
-    store MODEL_KEY, "::#{model_name}"
+  def self.wrap(owner, value)
+    return value if value.instance_of?(self) && value.owner == owner
+
+    new(owner).update(value || {})
   end
 
-  def model
-    @model ||= fetch(MODEL_KEY).constantize
+  attr_reader :owner
+
+  def initialize(owner)
+    super()
+    @owner = owner
   end
 
   def [](name)
@@ -26,8 +29,10 @@ class Preferable::Set < Hash
     value = field.type_cast(value)
 
     if value.nil? || field.invalid?(value) || field.default?(value)
+      owner.changed_attributes["preferences"] = to_hash if key?(field.name)
       delete field.name
     else
+      owner.changed_attributes["preferences"] = to_hash unless self[field.name] == value
       super field.name, value
     end
   end
@@ -37,10 +42,18 @@ class Preferable::Set < Hash
     self
   end
 
+  def to_hash
+    {}.update(self)
+  end
+
+  def to_yaml(*a)
+    to_hash.to_yaml(*a)
+  end
+
   private
 
     def find_field(name)
-      model.preferable[name.to_sym]
+      owner.class._preferable[name.to_sym]
     end
 
 end

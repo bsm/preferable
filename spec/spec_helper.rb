@@ -35,3 +35,11 @@ class User < ActiveRecord::Base
   end
 
 end
+
+class Admin < User
+
+  preferable do
+    boolean :reminder, :default => false
+  end
+
+end

@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.name        = "preferable"
   s.summary     = "Simple preferences store for ActiveRecord"
   s.description = "Great for storing user preferences"
-  s.version     = '0.2.0'
+  s.version     = '0.3.0'
 
   s.authors     = ["Dimitrij Denissenko", "Evgeniy Dolzhenko"]
   s.email       = "dimitrij@blacksquaremedia.com"
