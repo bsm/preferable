@@ -34,10 +34,7 @@ describe Preferable::Set do
 
   it 'should be serializable' do
     subject.set :color => '222222', :newsletter => '1'
-    dumped = YAML.dump(subject)
-    dumped.should == "--- !!map\ncolor: '222222'\nnewsletter: true\n"
-
-    loaded = YAML.load(dumped)
+    loaded = YAML.load(YAML.dump(subject))
     loaded.should == { :newsletter=>true, :color=>"222222" }
   end
 

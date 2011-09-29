@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    preferable (0.3.1)
+    preferable (0.3.2)
       abstract
       activerecord (>= 3.0.0, < 3.2.0)
 
