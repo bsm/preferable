@@ -7,9 +7,12 @@ class Preferable::Set < Hash
   end
 
   def self.wrap(owner, value)
-    return value if value.instance_of?(self) && value.owner == owner
-
-    new(owner).update(value || {})
+    if value.instance_of?(self) && value.owner == owner
+      value
+    else
+      value = {} unless value.is_a?(Hash)
+      new(owner).update(value)
+    end
   end
 
   attr_reader :owner
@@ -53,7 +56,7 @@ class Preferable::Set < Hash
   private
 
     def find_field(name)
-      owner.class._preferable[name.to_sym]
+      owner.class._preferable[name.to_sym] if owner
     end
 
 end

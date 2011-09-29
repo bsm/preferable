@@ -7,7 +7,7 @@ describe Preferable::Set do
   end
 
   let :admin do
-    User.new
+    Admin.new
   end
 
   subject do
@@ -38,6 +38,14 @@ describe Preferable::Set do
     loaded = YAML.load(dumped)
     loaded.should be_instance_of(Hash)
     loaded.should == { :newsletter=>true, :color=>"222222" }
+  end
+
+  it "should NOT fail with legacy settings" do
+    legacy = User.create!
+    legacy.update_column :preferences, "--- !map:Preferable::Set \n:color: \"222222\"\n_: \"::User\"\n"
+    legacy.reload
+    legacy.preferences.should be_instance_of(Preferable::Set)
+    legacy.preferences.should == { :color => "222222", "_" => "::User" }
   end
 
   describe "reading" do
