@@ -1,4 +1,7 @@
 class Preferable::Set < Hash
+  yaml_tag "tag:ruby.yaml.org,2002:hash"
+  yaml_tag "tag:yaml.org,2002:map"
+
   PRIVATE   = [:rehash, :fetch, :store, :shift, :delete, :delete_if, :keep_if].to_set.freeze
 
   # Make destructive methods private
@@ -9,9 +12,10 @@ class Preferable::Set < Hash
   def self.wrap(owner, value)
     if value.instance_of?(self) && value.owner == owner
       value
+    elsif value.is_a?(String) && value.include?('!map:Preferable::Set ')
+      wrap owner, YAML.load(value.sub(':Preferable::Set ', ''))
     else
-      value = {} unless value.is_a?(Hash)
-      new(owner).update(value)
+      new(owner).update(value || {})
     end
   end
 
@@ -32,12 +36,11 @@ class Preferable::Set < Hash
     value = field.type_cast(value)
 
     if value.nil? || field.invalid?(value) || field.default?(value)
-      owner.changed_attributes["preferences"] = to_hash if key?(field.name)
       delete field.name
     else
-      owner.changed_attributes["preferences"] = to_hash unless self[field.name] == value
       super field.name, value
     end
+    owner.send :write_attribute, :preferences, to_hash
   end
 
   def set(pairs)
@@ -51,6 +54,14 @@ class Preferable::Set < Hash
 
   def to_yaml(*a)
     to_hash.to_yaml(*a)
+  end
+
+  def init_with(coder)
+    update coder.map.symbolize_keys
+  end
+
+  def encode_with(coder)
+    each {|k, v| coder[k.to_s] = v }
   end
 
   private

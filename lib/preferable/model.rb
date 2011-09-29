@@ -40,8 +40,7 @@ module Preferable::Model
     #   user.preferences[:theme_id] = 3
     #
     def preferences
-      result = super
-      result.is_a?(Preferable::Set) ? result : write_attribute(:preferences, Preferable::Set.wrap(self, result))
+      @preferences ||= Preferable::Set.wrap(self, super)
     end
 
     # Preferences writer. Updates existing preferences (doesn't replace them!)

@@ -35,8 +35,9 @@ describe Preferable::Set do
   it 'should be serializable' do
     subject.set :color => '222222', :newsletter => '1'
     dumped = YAML.dump(subject)
+    dumped.should == "--- !!map\ncolor: '222222'\nnewsletter: true\n"
+
     loaded = YAML.load(dumped)
-    loaded.should be_instance_of(Hash)
     loaded.should == { :newsletter=>true, :color=>"222222" }
   end
 
@@ -44,6 +45,7 @@ describe Preferable::Set do
     legacy = User.create!
     legacy.update_column :preferences, "--- !map:Preferable::Set \n:color: \"222222\"\n_: \"::User\"\n"
     legacy.reload
+
     legacy.preferences.should be_instance_of(Preferable::Set)
     legacy.preferences.should == { :color => "222222", "_" => "::User" }
   end
