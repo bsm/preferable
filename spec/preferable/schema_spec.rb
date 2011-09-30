@@ -12,14 +12,14 @@ describe Preferable::Schema do
   it { should respond_to(:boolean) }
 
   it 'should build and store field' do
-    field = subject.field 'color', :string
+    field = subject.field :color, :string
     field.should be_a(Preferable::Field)
-    subject.should == { :color => field }
+    subject.should == { "color" => field }
   end
 
   it 'should provide shorthand method' do
     subject.integer :client_id
-    subject.keys.should == [:client_id]
+    subject.keys.should == ["client_id"]
     subject.values.first.should be_a(Preferable::Field)
   end
 
@@ -30,12 +30,12 @@ describe Preferable::Schema do
 
   it 'should allow specifying multiple fields with shorthand method' do
     subject.integer :first, :second
-    subject.keys.should =~ [:first, :second]
+    subject.keys.should =~ ["first", "second"]
   end
 
   it 'should allow specifying multiple fields with options with shorthand method' do
     subject.integer :first, :second, :default => 0
-    subject.keys.should =~ [:first, :second]
+    subject.keys.should =~ ["first", "second"]
     subject.values.map(&:default).should == [0, 0]
   end
 

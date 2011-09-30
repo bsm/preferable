@@ -3,6 +3,7 @@ require "active_record"
 
 module Preferable
   autoload :Model,  "preferable/model"
+  autoload :Coder,  "preferable/coder"
   autoload :Schema, "preferable/schema"
   autoload :Field,  "preferable/field"
   autoload :Set,    "preferable/set"

@@ -7,13 +7,7 @@ class Preferable::Set < Hash
   end
 
   def self.wrap(owner, value)
-    if value.instance_of?(self) && value.owner == owner
-      value
-    elsif value.is_a?(String) && value.include?(':Preferable::Set ')
-      wrap owner, YAML.load(value.sub(':Preferable::Set ', ''))
-    else
-      new(owner).update(value || {})
-    end
+    new(owner).set(value || {})
   end
 
   attr_reader :owner
@@ -49,18 +43,10 @@ class Preferable::Set < Hash
     {}.update(self)
   end
 
-  def init_with(coder)
-    update coder.map.symbolize_keys
-  end
-
-  def encode_with(coder)
-    each {|k, v| coder[k.to_s] = v }
-  end
-
   private
 
     def find_field(name)
-      owner.class._preferable[name.to_sym] if owner
+      owner.class._preferable[name.to_s] if owner
     end
 
 end

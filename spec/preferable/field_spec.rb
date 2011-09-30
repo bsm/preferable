@@ -15,7 +15,7 @@ describe Preferable::Field do
   end
 
   it 'should have a name' do
-    subject.name.should == :color
+    subject.name.should == "color"
   end
 
   it 'should have a type' do

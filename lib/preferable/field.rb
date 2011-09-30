@@ -26,7 +26,7 @@ class Preferable::Field
   def initialize(name, type, options = {})
     raise ArgumentError, "Unknown type '#{type}', available types are: #{TYPES.map(&:to_s).join(', ')}" unless TYPES.include?(type.to_sym)
 
-    @name    = name.to_sym
+    @name    = name.to_s
     @type    = type.to_sym
     @options = options.dup
     @default = type_cast @options.delete(:default)

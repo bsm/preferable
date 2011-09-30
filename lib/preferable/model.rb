@@ -21,7 +21,7 @@ module Preferable::Model
     #   end
     #
     def preferable(&block)
-      serialize :preferences, Hash
+      serialize :preferences, Preferable::Coder.new
       include PreferableMethods
 
       self._preferable   = self._preferable.dup if self._preferable
