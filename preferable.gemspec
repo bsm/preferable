@@ -17,5 +17,5 @@ Gem::Specification.new do |s|
   s.files        = Dir['README.markdown', 'lib/**/*']
 
   s.add_dependency "abstract"
-  s.add_dependency "activerecord", ">= 3.0.0", "< 3.2.0"
+  s.add_dependency "activerecord", "~> 3.1.0"
 end
