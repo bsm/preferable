@@ -15,7 +15,13 @@ Gem::Specification.new do |s|
 
   s.require_path = 'lib'
   s.files        = Dir['README.markdown', 'lib/**/*']
+  s.test_files   = Dir['spec/**/*']
 
   s.add_dependency "abstract"
   s.add_dependency "activerecord", "~> 3.1.0"
+
+  s.add_development_dependency "rake"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "sqlite3-ruby"
+  s.add_development_dependency "shoulda-matchers"
 end
