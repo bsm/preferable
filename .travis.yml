@@ -1,6 +1,6 @@
 rvm:
   - 1.9.2
   - 1.9.3
-  - ree
 gemfile:
   - Gemfile
+  - Gemfile.activerecord-3.1.x
